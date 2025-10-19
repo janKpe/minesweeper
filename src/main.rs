@@ -5,12 +5,12 @@ mod grid;
 use grid::MinesweeperGrid;
 
 use crate::{commands::COMMAND_TABEL, grid::GameState};
-const NUM_BOMBS: usize = 11;
-const COLUMNS: usize = 7;
-const ROWS: usize = 7;
+const NUM_BOMBS: usize = 10;
+const COLUMNS: usize = 8;
+const ROWS: usize = 8;
 
 fn main() {
-    // TODO: Add recursivly cheing neighbour cells, if theyr distance is 0 also reveal them
+    // TODO: guarantee that the first cell revealed has 0 sourounding bombs
     commands::print_help();
     game();
 }
@@ -29,6 +29,8 @@ fn game() {
             println!("{}", board);
         }
     }
+    println!("{}", board);
+
     if board.game_state == GameState::Lost {
         println!("You lost!");
     } else {

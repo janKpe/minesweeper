@@ -31,7 +31,7 @@ impl MinesweeperCell {
         self.state = new_state;
     }
 
-    pub(crate) fn reveal_cell(&mut self, bombs_in_area: i32) {
+    pub(crate) fn reveal(&mut self, bombs_in_area: i32) {
         self.bombs_in_area = Some(bombs_in_area);
         self.set_state(CellState::Revealed);
     }
