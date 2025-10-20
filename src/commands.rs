@@ -2,6 +2,21 @@ use std::process::exit;
 
 use crate::grid::MinesweeperGrid;
 
+macro_rules! return_if_error {
+    ( $( $val:expr ),* $(,)? ) => {
+        {
+            let mut __counter = 1;
+            $(
+                if $val.is_err() {
+                    println!("Expected arg {} to be int", __counter);
+                    return false;
+                }
+                __counter += 1;
+            )*
+        }
+    };
+}
+
 pub struct Command {
     pub func: fn(&mut MinesweeperGrid, &[String]) -> bool,
     pub command: &'static str,
@@ -17,12 +32,9 @@ pub const COMMAND_TABEL: [Command; 5] = [
 
             let x = args[0].parse::<usize>();
             let y = args[1].parse::<usize>();
-            if x.is_err() {
-                println!("Expected arg 1 to be int");
-            }
-            if y.is_err() {
-                println!("Expected arg 2 to be int");
-            }
+            
+            return_if_error!(x, y);
+
             return board.mark(x.unwrap() - 1, y.unwrap() - 1);
         },
         command: "m",
@@ -31,17 +43,14 @@ pub const COMMAND_TABEL: [Command; 5] = [
         func: |board, args| {
             if args.len() != 2 {
                 println!("Expected two arguemnts");
-                return true;
+                return false;
             }
 
             let x = args[0].parse::<usize>();
             let y = args[1].parse::<usize>();
-            if x.is_err() {
-                println!("Expected arg 1 to be int");
-            }
-            if y.is_err() {
-                println!("Expected arg 2 to be int");
-            }
+            
+            return_if_error!(x, y);
+
             return board.unmark(x.unwrap() - 1, y.unwrap() - 1);
         },
         command: "u",
@@ -50,17 +59,14 @@ pub const COMMAND_TABEL: [Command; 5] = [
         func: |board, args| {
             if args.len() != 2 {
                 println!("Expected two arguemnts");
-                return true;
+                return false;
             }
 
             let x = args[0].parse::<usize>();
             let y = args[1].parse::<usize>();
-            if x.is_err() {
-                println!("Expected arg 1 to be int");
-            }
-            if y.is_err() {
-                println!("Expected arg 2 to be int");
-            }
+
+            return_if_error!(x, y);
+
             return board.reveal(x.unwrap() - 1, y.unwrap() - 1);
         },
         command: "r",
