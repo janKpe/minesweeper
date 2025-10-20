@@ -10,7 +10,6 @@ const COLUMNS: usize = 8;
 const ROWS: usize = 8;
 
 fn main() {
-    // TODO: guarantee that the first cell revealed has 0 sourounding bombs
     commands::print_help();
     game();
 }

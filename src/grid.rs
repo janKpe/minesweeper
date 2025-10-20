@@ -29,17 +29,14 @@ impl MinesweeperGrid {
     pub fn new() -> Self {
         let rows = std::array::from_fn(|_| MinesweeperRow::new());
 
-        let mut grid = MinesweeperGrid {
+        return MinesweeperGrid {
             rows,
             fields_uncoverd: 0,
             game_state: GameState::InGame,
         };
-
-        grid.place_random_bombs(NUM_BOMBS);
-        grid
     }
 
-    fn place_random_bombs(&mut self, num_bombs: usize) {
+    fn place_random_bombs_excluding_range(&mut self, num_bombs: usize, excluded_range: &CellRange) {
         let mut rng = rand::rng();
 
         for _ in 0..num_bombs {
@@ -48,7 +45,7 @@ impl MinesweeperGrid {
 
             let mut cell = &mut self.rows[row_index].cells[column_index];
 
-            while cell.is_bomb {
+            while cell.is_bomb || (excluded_range.row_range.contains(&row_index) && excluded_range.column_range.contains(&column_index)) {
                 row_index = rng.random_range(0..ROWS);
                 column_index = rng.random_range(0..COLUMNS);
                 cell = &mut self.rows[row_index].cells[column_index];
@@ -81,6 +78,12 @@ impl MinesweeperGrid {
         if self.rows[row].cells[column].state == CellState::Revealed {
             return false;
         }
+
+        if self.fields_uncoverd == 0 {
+            let excluded_range = self.get_range_of_sourounding_cells_for_cell_at(row, column);
+            self.place_random_bombs_excluding_range(NUM_BOMBS, &excluded_range);
+        }
+
 
         let cell_range = self.get_range_of_sourounding_cells_for_cell_at(row, column);
         let num_bombs = self.count_bombs_in_range(&cell_range);
