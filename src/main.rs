@@ -16,6 +16,7 @@ fn main() {
 
 fn game() {
     let mut board = MinesweeperGrid::new();
+    println!("{}", board);
     loop {
         let input = get_console_input();
 
